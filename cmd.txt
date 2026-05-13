@@ -1,0 +1,56 @@
+# 🔗 STATIC + DYNAMIC LINKING (ALL COMMANDS IN ONE PLACE)
+
+# ---------- STATIC LINKING ----------
+
+# Step 1: Compile library source → object file
+
+gcc -c lib_mylib.c -o lib_mylib.o
+
+# Step 2: Create static library (.a file)
+
+ar rcs lib_mylib.a lib_mylib.o
+
+# Step 3: Compile driver program → object file
+
+gcc -c driver.c -o driver.o
+
+# Step 4: Link driver with static library
+
+gcc -o driver driver.o -L. lib_mylib.a
+
+# Step 5: Run
+
+./driver
+
+# ---------- DYNAMIC LINKING ----------
+
+# Step 1: Compile with Position Independent Code
+
+gcc -c -fPIC mylib.c -o mylib.o
+
+# Step 2: Create shared library (.so file)
+
+gcc -shared -o libmylib.so mylib.o
+
+# Step 3: Compile & link with shared library
+
+gcc main.c -L. -lmylib -o myprogram
+
+# Step 4: Set library path (IMPORTANT)
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+
+# Step 5: Run
+
+./myprogram
+
+# ---------- EXTRA USEFUL COMMANDS ----------
+
+# Check dynamic dependencies
+
+ldd myprogram
+
+# Check symbols in library
+
+nm libmylib.a
+nm libmylib.so
